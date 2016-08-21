@@ -1,0 +1,78 @@
+package normalization;
+
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+public class NormalizationTest {
+
+	@Test
+	public void stripNewLineTabTest() {
+		String strippedText = Normalization.stripNewLineTab("hi \n dear friend \t how are you\t I hope you are fine\n let me know\n.\n");
+		String desiredText = "hi dear friend how are you I hope you are fine let me know.";
+
+		assertEquals(desiredText, strippedText);
+	}
+
+	@Test
+	public void stripURLsTest() {
+		String strippedText = Normalization.stripURLs("http://stackoverflow.com/questions/19025868/what-is-the-meaning-r-carriage-return-in-java-can-any-one-give-a-small-example"
+													   + " hello "
+													   + "http://olx.ro/oferte/q-seat-arosa/?search%5Bprivate_business%5D=private&page=2"
+													   + " how arehttps://www.youtube.com/watch?v=3phVp93WZJ8");
+		String desiredText = "hello how are";
+
+		assertEquals(desiredText, strippedText);
+		assertEquals("", Normalization.stripURLs("https://www.google.ro/"));
+	}
+
+	@Test
+	public void stripHashtagsTest() {
+		String strippedText = Normalization.stripHashtags("hi #dear #friend how#are you#fine1nigga?");
+		String desiredText = "hi how you?";
+		
+		assertEquals(desiredText, strippedText);
+	}
+	
+	@Test
+	public void stripMentionsTest(){
+		String strippedText = Normalization.stripHashtags("hi #dear #friend how#are you#fine1nigga?");
+		String desiredText = "hi how you?";
+		
+		assertEquals(desiredText, strippedText);
+	}
+	
+	@Test
+	public void stripQuotAmpLtTest(){
+		String strippedText = Normalization.stripQuotAmpLt("&amphi &ltfriend&quot &quothow&lt &amp you?");
+		String desiredText = "hi friend how you?";
+		
+		assertEquals(desiredText, strippedText);
+	}
+	
+	@Test
+	public void correctApostrophesTest(){
+		String textToCorrect = Normalization.correctApostrophes("’Hi ’dear’ frie’nd’");
+		String desiredText = "'Hi 'dear' frie'nd'";
+		
+		assertEquals(desiredText, textToCorrect);
+	}
+	
+	@Test
+	public void stripNumbersTest(){
+		String textToCorrect = Normalization.stripNumbers("hi189 11dear48 fri238end");
+		String desiredText = "hi dear friend";
+				
+		assertEquals(desiredText, textToCorrect);
+	}
+	
+	@Test
+	public void correctDotCommaDoublePointsTest(){
+		String textToCorrect = Normalization.stripNumbers("hi ,dear .friend:");
+		String desiredText = "hi, dear. friend:";
+		
+		assertEquals(desiredText, textToCorrect);
+	}
+	
+	
+
+}
