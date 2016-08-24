@@ -1,0 +1,13 @@
+.ui-layout-pane {
+    border: 0;
+}
+#logo{
+    display:block;
+    margin:auto;
+}
+/* .ui-widget-content {
+	background: -webkit-radial-gradient(50% 75%,circle,#262626,#343434) !important;
+}
+.ui-widget-content {
+	border-radius: 0px !important;
+} */
