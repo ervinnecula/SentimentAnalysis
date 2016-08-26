@@ -34,7 +34,7 @@
 
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
-			<artifactId>south-street</artifactId>
+			<artifactId>ui-lightness</artifactId>
 			<version>1.0.6</version>
 		</dependency>
 

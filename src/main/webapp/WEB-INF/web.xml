@@ -43,7 +43,7 @@
 
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
-		<param-value>south-street</param-value>
+		<param-value>ui-lightness</param-value>
 	</context-param>
 
 </web-app>

@@ -2,6 +2,7 @@ package normalization;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import normalization.*;
 
 public class NormalizationTest {
 
@@ -67,12 +68,42 @@ public class NormalizationTest {
 	
 	@Test
 	public void correctDotCommaDoublePointsTest(){
-		String textToCorrect = Normalization.stripNumbers("hi ,dear .friend:");
-		String desiredText = "hi, dear. friend:";
+		String textToCorrect = Normalization.correctDotCommaDoublePoints("hi ,dear .friend :a :asd .smth. good");
+		String desiredText = "hi, dear. friend: a: asd. smth. good";
 		
 		assertEquals(desiredText, textToCorrect);
 	}
 	
+	@Test
+	public void removeQuotesApostrophesTest(){
+		String textToCorrect = Normalization.removeQuotesApostrophes("hi'dear\"friend's'");
+		String desiredText = "hi dear friend s ";
+		
+		assertEquals(desiredText,textToCorrect);
+	}
 	
+	@Test
+	public void replaceUnderscoreTest(){
+		String textToCorrect = Normalization.replaceUnderscore("hi_dear _ friend_");
+		String desiredText = "hi dear   friend ";
+		
+		assertEquals(desiredText,textToCorrect);
+	}
+	
+	@Test
+	public void stripInnerMultipleSpacesTest(){
+		String textToCorrect = Normalization.stripMultipleSpaces("hi dear  friend    say hi           \n  ");
+		String desiredText = "hi dear friend say hi";
+		
+		assertEquals(desiredText,textToCorrect);
+	}
+	
+	@Test
+	public void stripUnnecessaryWordsTest(){
+		String textToCorrect = Normalization.stripUnnecessaryWords("hi an dear have friend when you");
+		String desiredText = "hi  dear  friend  ";
+		
+		assertEquals(desiredText,textToCorrect);
+	}
 
 }

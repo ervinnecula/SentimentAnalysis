@@ -11,3 +11,17 @@
 .ui-widget-content {
 	border-radius: 0px !important;
 } */
+
+.ui-widget-content button{
+	background: #f6af3a !important;
+	color: white !important;
+}
+
+.ui-widget-content button:hover{
+	background: #fdc05c !important;
+	color: white !important;
+}
+
+.ui-widget-content button:focus {
+	outline:0;
+}
