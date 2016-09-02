@@ -1,10 +1,11 @@
-package normalization;
+package main;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import normalization.*;
 
-public class NormalizationTest {
+import utilities.*;
+
+public class NormalizationTests {
 
 	@Test
 	public void stripNewLineTabTest() {
@@ -104,6 +105,14 @@ public class NormalizationTest {
 		String desiredText = "hi  dear  friend  ";
 		
 		assertEquals(desiredText,textToCorrect);
+	}
+	
+	@Test
+	public void normalizeMessageTest(){
+		String textToCorrect = Normalization.normalizeMessage("hi an dear have friend   when   you_fine'dear :stupid .but .works ,does12it? #sure #it @ervin http://checkthis.com");
+		String desiredText = "hi dear friend fine dear: stupid. but. works, doesit?";
+		
+		assertEquals(desiredText, textToCorrect);
 	}
 
 }

@@ -1,4 +1,4 @@
-package normalization;
+package utilities;
 
 public class Normalization {
 
@@ -87,5 +87,22 @@ public class Normalization {
 
         return strippedText;
     }
+	
+	static public String normalizeMessage(String message){
+		message = replaceUnderscore(message);
+		message = correctApostrophes(message);
+		message = correctDotCommaDoublePoints(message);
+		message = removeQuotesApostrophes(message);
+		message = stripHashtags(message);
+		message = stripMentions(message);
+		message = stripNewLineTab(message);
+		message = stripNumbers(message);
+		message = stripQuotAmpLt(message);
+		message = stripUnnecessaryWords(message);
+		message = stripLonelyLetters(message);
+		message = stripMultipleSpaces(message);
+		
+		return message;
+	}
 
 }
