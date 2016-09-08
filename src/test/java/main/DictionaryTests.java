@@ -13,9 +13,9 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import analyze.Dictionary;
 import datamodel.SentimentType;
 import datamodel.WordModel;
-import utilities.Dictionary;
 
 public class DictionaryTests {
 

@@ -8,17 +8,17 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
+import analyze.Dictionary;
+import analyze.Normalization;
 import datamodel.SentimentType;
-import utilities.Dictionary;
 import utilities.LoggerProducer;
-import utilities.Normalization;
 
 public class TrainModel {
 	
 	@Inject
 	private static final Logger logger = Logger.getLogger(LoggerProducer.class);
 	
-	static public void trainModel(String sourceFilePath){
+	public static void trainModel(String sourceFilePath){
 		String result, message, line;
 		BufferedReader br = null;
 		
@@ -51,11 +51,9 @@ public class TrainModel {
 				try{
 					br.close();
 				}catch(IOException ex){
-					logger.warn("IOException: ",ex);
+					logger.error("IOException: ",ex);
 				}
 			}
 		}
-		
-		Dictionary.serializeDictionary("dictionary.xml");
 	}
 }

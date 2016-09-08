@@ -3,6 +3,7 @@ package main;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
+import analyze.Normalization;
 import utilities.*;
 
 public class NormalizationTests {
