@@ -2,6 +2,7 @@ package utilities;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.URL;
 import java.nio.channels.WritableByteChannel;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,12 +23,16 @@ public class BuildMovies {
 	@Inject
 	private static final Logger logger = Logger.getLogger(LoggerProducer.class);
 
-	public static void generateMovie(String outputPath, List<Movie> movies) throws IOException {
+	public static void generateMovie(String fileName, List<Movie> movies) throws IOException {
 
 		List<Track> videoTracks = new LinkedList<Track>();
 		List<Track> audioTracks = new LinkedList<Track>();
 		WritableByteChannel fc = null;
 		RandomAccessFile raf  = null;
+		URL resource = BuildMovies.class.getResource("/reactions/blink.mp4");
+		
+		String cleanPath = resource.getFile().substring(0, resource.getFile().length()-9);
+		String reactionPath = cleanPath + fileName;
 		try {
 
 			for (Movie movieInstance : movies) {
@@ -38,7 +43,7 @@ public class BuildMovies {
 					if (track.getHandler().equals("vide")) {
 						videoTracks.add(track);
 					}
-				}
+			}
 			}
 			Movie result = new Movie();
 			if (audioTracks.size() > 0) {
@@ -49,12 +54,12 @@ public class BuildMovies {
 			}
 			
 			Container out = (BasicContainer) new DefaultMp4Builder().build(result);
-			raf = new RandomAccessFile(String.format(outputPath), "rw");
+			raf = new RandomAccessFile(reactionPath, "rw");
 			fc = raf.getChannel();
 			
 			out.writeContainer(fc);
 			
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			logger.error(ex);
 		} finally {
 			raf.close();

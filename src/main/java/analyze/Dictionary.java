@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -14,15 +15,21 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import datamodel.SentimentType;
 import datamodel.WordModel;
+import utilities.LoggerProducer;
 import utilities.Validation;
 
 public class Dictionary {
-
+	
+	@Inject
+	private static final Logger logger = Logger.getLogger(LoggerProducer.class);
 	private static Map<String, List<WordModel>> dictionary;
 
 	/**
@@ -136,11 +143,18 @@ public class Dictionary {
 	public static void serializeDictionary(String docName) {
 
 		List<WordModel> wordsToBeSerialized = new ArrayList<WordModel>();
-
+		File f = new File(docName);
+		Document doc;
+		
 		try {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document doc = documentBuilder.newDocument();
+			doc = documentBuilder.newDocument();
+//			if(f.exists())
+//				 doc = documentBuilder.parse(new File(docName));
+//			else{
+//				doc = documentBuilder.newDocument();
+//			}
 
 			// <dictionary>
 			Element rootElement = doc.createElement("dictionary");
@@ -158,7 +172,7 @@ public class Dictionary {
 				rootElement.appendChild(letterElement);
 
 				for (WordModel wordEntry : wordsToBeSerialized) {
-					if (wordEntry.getNegCases() + wordEntry.getPosCases() > 10) {
+//					if (wordEntry.getNegCases() + wordEntry.getPosCases() > 10) {
 						Element entryElement = doc.createElement("entry");
 						letterElement.appendChild(entryElement);
 
@@ -173,14 +187,14 @@ public class Dictionary {
 						Element negElement = doc.createElement("neg");
 						negElement.appendChild(doc.createTextNode(Integer.toString(wordEntry.getNegCases())));
 						entryElement.appendChild(negElement);
-					}
+//					}
 				}
 
 			}
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+//			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 
 			DOMSource source = new DOMSource(doc);
@@ -189,6 +203,37 @@ public class Dictionary {
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+	
+	public static void loadDictionary(String docName){
+
+		try{
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document doc = documentBuilder.parse(new File(docName));
+			
+			for (char letter = 'a'; letter <= 'z'; letter++) {
+				String strLetter = Character.toString(letter);
+				
+				NodeList wordsOfLetter = doc.getElementsByTagName(strLetter);
+				List<WordModel> listWordsOfLetter = new ArrayList<WordModel>();
+				
+				for(int i=0; i<wordsOfLetter.getLength(); i++){
+					Node entry = wordsOfLetter.item(i);
+					WordModel wm = new WordModel(entry.getChildNodes().item(0).getTextContent(), 
+											     Integer.parseInt(entry.getChildNodes().item(1).getTextContent()),
+											     Integer.parseInt(entry.getChildNodes().item(2).getTextContent())
+											     );
+					listWordsOfLetter.add(wm);
+					
+				}
+				dictionary.put(strLetter, listWordsOfLetter);				
+				
+			}
+			
+		} catch (Exception ex){
+			logger.error(ex);
 		}
 	}
 	

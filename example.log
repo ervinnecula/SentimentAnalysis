@@ -1,0 +1,12 @@
+ERROR main utilities.LoggerProducer - java.io.FileNotFoundException: D:\workspace_laura\SentimentAnalysis\dictionaryText.xml (The system cannot find the file specified)
+ERROR main utilities.LoggerProducer - java.lang.NullPointerException
+ERROR main utilities.LoggerProducer - java.lang.NullPointerException
+ERROR main utilities.LoggerProducer - java.lang.NullPointerException
+ERROR main utilities.LoggerProducer - java.lang.NullPointerException
+ERROR main utilities.LoggerProducer - java.lang.NullPointerException
+ERROR main utilities.LoggerProducer - org.xml.sax.SAXParseException; systemId: file:/D:/workspace_laura/SentimentAnalysis/dictionaryTest.xml; lineNumber: 28; columnNumber: 15; The markup in the document following the root element must be well-formed.
+ERROR main utilities.LoggerProducer - java.lang.NullPointerException
+ERROR main utilities.LoggerProducer - java.lang.NullPointerException
+ERROR main utilities.LoggerProducer - java.lang.NullPointerException
+ERROR main utilities.LoggerProducer - java.lang.NullPointerException
+ERROR main utilities.LoggerProducer - java.lang.NullPointerException

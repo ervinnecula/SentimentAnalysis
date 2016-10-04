@@ -16,6 +16,7 @@ import org.w3c.dom.NodeList;
 import analyze.Dictionary;
 import datamodel.SentimentType;
 import datamodel.WordModel;
+import training.TrainModel;
 
 public class DictionaryTests {
 
@@ -76,9 +77,9 @@ public class DictionaryTests {
 
 	@Test
 	public void serializeDictionaryTestExist() {
-		Dictionary.serializeDictionary("dictionary.xml");
+		Dictionary.serializeDictionary("dictionaryTest.xml");
 		boolean file = false;
-		File f = new File("dictionary.xml");
+		File f = new File("dictionaryTest.xml");
 		if (f.exists() && !f.isDirectory()) {
 			file = true;
 		}
@@ -89,12 +90,12 @@ public class DictionaryTests {
 	public void serlializeDictionaryTestCheckWords() {
 		boolean check = true;
 		
-		Dictionary.serializeDictionary("dictionary.xml");
+		Dictionary.serializeDictionary("dictionaryTest.xml");
 		
 		try {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document doc = documentBuilder.parse(new File("dictionary.xml"));
+			Document doc = documentBuilder.parse(new File("dictionaryTest.xml"));
 			
 			// get <entry> elements inside <c> tag
 			NodeList childNodes = doc.getElementsByTagName("c").item(0).getChildNodes();
@@ -112,5 +113,22 @@ public class DictionaryTests {
 		
 		assertEquals(true, check);
 	}
-
+	
+	@Test
+	public void loadDictionaryContentTest(){
+		
+		Dictionary.serializeDictionary("dictionaryTest.xml");
+		Dictionary.loadDictionary("dictionaryTest.xml");
+		boolean loadedWell = false;
+		
+		List<WordModel> wordsBeginWithC = Dictionary.getDictionary().get("c");
+		
+		for(WordModel wm:wordsBeginWithC){
+			if(wm.getWord().equals("cireasa") || wm.getWord().equals("cangur") || wm.getWord().equals("colina") || wm.getWord().equals("cantina")){
+				loadedWell = true;
+			}
+		}
+		
+		assertEquals(true, loadedWell);
+	}
 }

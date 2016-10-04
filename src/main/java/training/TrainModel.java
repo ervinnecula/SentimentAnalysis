@@ -1,6 +1,7 @@
 package training;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -22,10 +23,11 @@ public class TrainModel {
 		String result, message, line;
 		BufferedReader br = null;
 		
-		Dictionary.initializeDictionary();
-		
 		try{
-			br = new BufferedReader(new FileReader(sourceFilePath));
+			ClassLoader classLoader = TrainModel.class.getClassLoader();
+			File file = new File(classLoader.getResource("finaltraining.csv").getFile());
+			
+			br = new BufferedReader(new FileReader(file));
 			while(null != (line = br.readLine())){
 				result = line.substring(0,1);
 				message = line.substring(2, line.length());
