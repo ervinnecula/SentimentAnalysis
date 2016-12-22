@@ -25,7 +25,7 @@ public class TrainModel {
 		
 		try{
 			ClassLoader classLoader = TrainModel.class.getClassLoader();
-			File file = new File(classLoader.getResource("finaltraining.csv").getFile());
+			File file = new File(classLoader.getResource(sourceFilePath).getFile());
 			
 			br = new BufferedReader(new FileReader(file));
 			while(null != (line = br.readLine())){

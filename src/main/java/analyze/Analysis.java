@@ -22,23 +22,34 @@ public class Analysis {
 
 	private static final int LOW_PERCENTAGE = 30;
 	private static final int HIGH_PERCENTAGE = 70;
+	static private ClassLoader classLoader = TrainModel.class.getClassLoader();
+	static private String[] reactions = { 
+			classLoader.getResource("/reactions/blink.mp4").getPath(),
+			classLoader.getResource("/reactions/sad.mp4").getPath(),
+			classLoader.getResource("/reactions/thumbs-up.mp4").getPath(),
+			classLoader.getResource("/reactions/small-smile.mp4").getPath(),
+			classLoader.getResource("/reactions/smile.mp4").getPath()
+			};
 	
 	@Inject
 	private static final Logger logger = Logger.getLogger(LoggerProducer.class);
 	
 	public static SentimentType analyzeWordsSentence(String sentence) {
 		int posWords = 0, negWords = 0;
-
-		if (sentence != null) {
+		sentence = Normalization.normalizeMessage(sentence);
+		
+		if (!sentence.equals("")) {
 			List<WordPercentage> wordsAndPercentages = new ArrayList<WordPercentage>();
-			sentence = Normalization.normalizeMessage(sentence);
+			
 
 			wordsAndPercentages = Analysis.getPercentagesPerWord(sentence);
-			for (WordPercentage wordAndPercentage : wordsAndPercentages) {
-				if ((int) wordAndPercentage.getPercentage() < LOW_PERCENTAGE) {
-					negWords++;
-				} else if ((int) wordAndPercentage.getPercentage() > HIGH_PERCENTAGE) {
-					posWords++;
+			if(wordsAndPercentages.size() != 0){
+				for (WordPercentage wordAndPercentage : wordsAndPercentages) {
+					if ((int) wordAndPercentage.getPercentage() < LOW_PERCENTAGE) {
+						negWords++;
+					} else if ((int) wordAndPercentage.getPercentage() > HIGH_PERCENTAGE) {
+						posWords++;
+					}
 				}
 			}
 		}
@@ -48,19 +59,8 @@ public class Analysis {
 	public static SentimentType calculateSentimentSentence(int posWords, int negWords) {
 		List<Movie> movies = new ArrayList<Movie>();
 		SentimentType sentiment = null;
-		
-		ClassLoader classLoader = TrainModel.class.getClassLoader();
-		
+
 		try {
-			String[] reactions = { 
-					classLoader.getResource("/reactions/blink.mp4").getPath(),
-					classLoader.getResource("/reactions/sad.mp4").getPath(),
-					classLoader.getResource("/reactions/thumbs-up.mp4").getPath(),
-					classLoader.getResource("/reactions/small-smile.mp4").getPath(),
-					classLoader.getResource("/reactions/smile.mp4").getPath()
-					};
-			
-			
 			if (posWords + negWords == 0) {
 				movies.add(MovieCreator.build(reactions[2]));
 				sentiment = SentimentType.NEUTRAL;
@@ -95,23 +95,25 @@ public class Analysis {
 	}
 
 	public static List<WordPercentage> getPercentagesPerWord(String sentence) {
-
-		DecimalFormat df = new DecimalFormat("#.##");
 		List<WordPercentage> wordsAndPercentages = new ArrayList<WordPercentage>();
-
-		for (String word : sentence.split(" ")) {
-			WordModel wm = Dictionary.findWordModel(word);
-			if (wm != null) {
-				
-				double posCases = wm.getPosCases();
-				double percentage = posCases / (posCases + wm.getNegCases()) * 100;
-				percentage = Double.valueOf(df.format(percentage));
-
-				WordPercentage wp = new WordPercentage(word, percentage);
-				wordsAndPercentages.add(wp);
-
+			
+			DecimalFormat df = new DecimalFormat("#.##");
+			
+			String[] senteceWords = sentence.split(" ");
+			
+			for (String word : senteceWords) {
+				WordModel wm = Dictionary.findWordModel(word);
+				if (wm != null) {
+					
+					double posCases = wm.getPosCases();
+					double percentage = posCases / (posCases + wm.getNegCases()) * 100;
+					percentage = Double.valueOf(df.format(percentage));
+	
+					WordPercentage wp = new WordPercentage(word, percentage);
+					wordsAndPercentages.add(wp);
+	
+				}
 			}
-		}
 		return wordsAndPercentages;
 
 	}

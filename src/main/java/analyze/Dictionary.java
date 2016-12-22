@@ -23,6 +23,7 @@ import org.w3c.dom.NodeList;
 
 import datamodel.SentimentType;
 import datamodel.WordModel;
+import training.TrainModel;
 import utilities.LoggerProducer;
 import utilities.Validation;
 
@@ -172,7 +173,7 @@ public class Dictionary {
 				rootElement.appendChild(letterElement);
 
 				for (WordModel wordEntry : wordsToBeSerialized) {
-//					if (wordEntry.getNegCases() + wordEntry.getPosCases() > 10) {
+					if (wordEntry.getNegCases() + wordEntry.getPosCases() > 10) {
 						Element entryElement = doc.createElement("entry");
 						letterElement.appendChild(entryElement);
 
@@ -187,7 +188,7 @@ public class Dictionary {
 						Element negElement = doc.createElement("neg");
 						negElement.appendChild(doc.createTextNode(Integer.toString(wordEntry.getNegCases())));
 						entryElement.appendChild(negElement);
-//					}
+					}
 				}
 
 			}
@@ -211,7 +212,12 @@ public class Dictionary {
 		try{
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document doc = documentBuilder.parse(new File(docName));
+			
+			ClassLoader classLoader = TrainModel.class.getClassLoader();
+			File file = new File(classLoader.getResource(docName).getFile());
+			
+			Document doc = documentBuilder.parse(file);
+			
 			
 			for (char letter = 'a'; letter <= 'z'; letter++) {
 				String strLetter = Character.toString(letter);
@@ -221,9 +227,9 @@ public class Dictionary {
 				
 				for(int i=0; i<wordsOfLetter.getLength(); i++){
 					Node entry = wordsOfLetter.item(i);
-					WordModel wm = new WordModel(entry.getChildNodes().item(0).getTextContent(), 
-											     Integer.parseInt(entry.getChildNodes().item(1).getTextContent()),
-											     Integer.parseInt(entry.getChildNodes().item(2).getTextContent())
+					WordModel wm = new WordModel(entry.getChildNodes().item(i).getChildNodes().item(0).getTextContent(), 
+											     Integer.parseInt(entry.getChildNodes().item(i).getChildNodes().item(1).getTextContent()),
+											     Integer.parseInt(entry.getChildNodes().item(i).getChildNodes().item(2).getTextContent())
 											     );
 					listWordsOfLetter.add(wm);
 					

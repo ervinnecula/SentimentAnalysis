@@ -5,6 +5,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import org.primefaces.context.RequestContext;
+
 import analyze.Dictionary;
 import service.VideoService;
 import training.TrainModel;
@@ -36,8 +38,11 @@ public class MainBean {
 	}
 	
 	public void getResponseVideo() {
-		setVideo(vs.getResponseVideo(text));
-		firstTime=false;
+		if(!text.equals("")){
+			setVideo(vs.getResponseVideo(text));
+			firstTime=false;	
+		}
+		RequestContext.getCurrentInstance().execute("videoPlay('"+ vs.getResponseVideo(text) +"')");
 	}
 	
 	public String getVideo() {
@@ -52,8 +57,7 @@ public class MainBean {
 		if(firstTime == true){
 			if(Dictionary.getDictionary() == null){
 				Dictionary.initializeDictionary();
-				TrainModel.trainModel("finaltraining.csv");
-				Dictionary.serializeDictionary("dictionaray.xml");
+				Dictionary.loadDictionary("dictionary.xml");
 			}
 			video = vs.getInitialVideo();
 			firstTime = false;

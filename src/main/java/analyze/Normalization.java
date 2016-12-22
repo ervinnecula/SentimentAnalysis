@@ -1,5 +1,7 @@
 package analyze;
 
+import java.util.StringJoiner;
+
 public class Normalization {
 
 	static public String stripNewLineTab(String message) {
@@ -50,7 +52,7 @@ public class Normalization {
     }
 	
 	static public String stripUnnecessaryWords(String message) {
-        StringBuilder strippedText = new StringBuilder();
+        StringJoiner strippedText = new StringJoiner(" ");
         String[] unnecesaryWords = {"a", "an", "at", "and", "am", "any", "as", "are", "all",
             "be", "his", "he", "him", "her", "hers", "how", "have", "has", "had", "from",
             "i", "it", "its", "is", "in", "ll", "im",
@@ -66,17 +68,18 @@ public class Normalization {
                 String unnecesaryWord = unnecesaryWords[j];
                 if (sentenceWord.equals(unnecesaryWord)) {
                     sentenceWords[i] = "";
+                    break;
                 }
             }
         }
-        for (int index = 0; index < sentenceWords.length - 1; index++) {
-            strippedText = strippedText.append(sentenceWords[index]).append(" ");
+        for (int index = 0; index < sentenceWords.length; index++) {
+            strippedText = strippedText.add(sentenceWords[index]);
+            //strippedText = strippedText.add(" ");
         }
-        
+       // strippedText.append(sentenceWords[sentenceWords.length]);
         String stringStrippedText = strippedText.toString();
-        stripMultipleSpaces(stringStrippedText);
         
-        return stringStrippedText;
+        return stripMultipleSpaces(stringStrippedText);
     }
 	
 	static public String stripLonelyLetters(String message) {
@@ -101,7 +104,7 @@ public class Normalization {
 		message = stripNewLineTab(message);
 		message = stripNumbers(message);
 		message = stripQuotAmpLt(message);
-//		message = stripUnnecessaryWords(message);
+		message = stripUnnecessaryWords(message);
 		message = stripLonelyLetters(message);
 		message = removeEllipsis(message);
 		message = removeSymbolsAfterWord(message);
